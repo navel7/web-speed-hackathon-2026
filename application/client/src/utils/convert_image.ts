@@ -1,41 +1,24 @@
-import { initializeImageMagick, ImageMagick, MagickFormat } from "@imagemagick/magick-wasm";
-import magickWasm from "@imagemagick/magick-wasm/magick.wasm?binary";
-import { dump, insert, ImageIFD } from "piexifjs";
+let isInitialized = false;
 
-interface Options {
-  extension: MagickFormat;
-}
+export async function convertImage(file: File, options: { extension: any }): Promise<Blob> {
+  const { initializeImageMagick, ImageMagick } = await import("@imagemagick/magick-wasm");
+  
+  if (!isInitialized) {
+    const { default: wasmUrl } = await import("@imagemagick/magick-wasm/magick.wasm?binary");
+    const response = await fetch(wasmUrl as unknown as string);
+    const wasmBytes = new Uint8Array(await response.arrayBuffer());
+    
+    await initializeImageMagick(wasmBytes);
+    isInitialized = true;
+  }
 
-export async function convertImage(file: File, options: Options): Promise<Blob> {
-  await initializeImageMagick(magickWasm);
+  const arrayBuffer = await file.arrayBuffer();
+  const uint8Array = new Uint8Array(arrayBuffer);
 
-  const byteArray = new Uint8Array(await file.arrayBuffer());
-
-  return new Promise((resolve) => {
-    ImageMagick.read(byteArray, (img) => {
-      img.format = options.extension;
-
-      const comment = img.comment;
-
-      img.write((output) => {
-        if (comment == null) {
-          resolve(new Blob([output as Uint8Array<ArrayBuffer>]));
-          return;
-        }
-
-        // ImageMagick では EXIF の ImageDescription フィールドに保存されているデータが
-        // 非標準の Comment フィールドに移されてしまうため
-        // piexifjs を使って ImageDescription フィールドに書き込む
-        const binary = Array.from(output as Uint8Array<ArrayBuffer>)
-          .map((b) => String.fromCharCode(b))
-          .join("");
-        const descriptionBinary = Array.from(new TextEncoder().encode(comment))
-          .map((b) => String.fromCharCode(b))
-          .join("");
-        const exifStr = dump({ "0th": { [ImageIFD.ImageDescription]: descriptionBinary } });
-        const outputWithExif = insert(exifStr, binary);
-        const bytes = Uint8Array.from(outputWithExif.split("").map((c) => c.charCodeAt(0)));
-        resolve(new Blob([bytes]));
+  return await new Promise((resolve) => {
+    ImageMagick.read(uint8Array, (image) => {
+      image.write(options.extension, (data) => {
+        resolve(new Blob([data], { type: "image/jpeg" }));
       });
     });
   });
