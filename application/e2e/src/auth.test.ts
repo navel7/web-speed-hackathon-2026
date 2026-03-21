@@ -78,6 +78,7 @@ test.describe("サインイン・新規登録", () => {
   });
 
   test("サインインに失敗するとエラーが表示される", async ({ page }) => {
+    await page.waitForTimeout(200);
     await page.getByRole("textbox", { name: "ユーザー名" }).pressSequentially("o6yq16leo");
     await page.getByRole("textbox", { name: "パスワード" }).pressSequentially("wrong_password");
 
