@@ -1,19 +1,22 @@
+const isProduction = process.env.NODE_ENV === "production";
+
 module.exports = {
   presets: [
     ["@babel/preset-typescript"],
     [
       "@babel/preset-env",
       {
-        targets: "ie 11",
+        targets: isProduction ? "defaults, not ie 11" : "last 1 chrome version",
         corejs: "3",
-        modules: "commonjs",
-        useBuiltIns: false,
+        modules: false, // ESMを維持してTree ShakingとCode Splittingを有効化
+        useBuiltIns: "entry",
       },
     ],
     [
       "@babel/preset-react",
       {
-        development: true,
+        // NODE_ENVに基づいて適切にモードを切り替える
+        development: process.env.NODE_ENV === "development",
         runtime: "automatic",
       },
     ],
