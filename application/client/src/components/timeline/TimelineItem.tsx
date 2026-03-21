@@ -25,12 +25,14 @@ const isClickedAnchorOrButton = (target: EventTarget | null, currentTarget: Elem
 /**
  * @typedef {object} Props
  * @property {Models.Post} post
+ * @property {boolean} [isPriority]
  */
 interface Props {
   post: Models.Post;
+  isPriority?: boolean;
 }
 
-export const TimelineItem = ({ post }: Props) => {
+export const TimelineItem = ({ post, isPriority = false }: Props) => {
   const navigate = useNavigate();
 
   /**
@@ -56,6 +58,9 @@ export const TimelineItem = ({ post }: Props) => {
           >
             <img
               alt={post.user.profileImage.alt}
+              loading={isPriority ? "eager" : "lazy"}
+              decoding="async"
+              fetchpriority={isPriority ? "high" : "auto"}
               src={getProfileImagePath(post.user.profileImage.id)}
             />
           </Link>

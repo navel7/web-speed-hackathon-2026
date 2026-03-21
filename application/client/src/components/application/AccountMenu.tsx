@@ -40,6 +40,8 @@ export const AccountMenu = ({ user, onLogout }: Props) => {
         <img
           alt={user.profileImage.alt}
           className="h-10 w-10 shrink-0 rounded-full object-cover"
+          loading="lazy"
+          decoding="async"
           src={getProfileImagePath(user.profileImage.id)}
         />
         <div className="hidden min-w-0 flex-1 text-left lg:block">
