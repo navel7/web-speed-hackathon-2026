@@ -8,10 +8,14 @@ interface Props {
 export const MovieArea = ({ movie }: Props) => {
   return (
     <div
-      className="border-cax-border bg-cax-surface-subtle relative h-full w-full overflow-hidden rounded-lg border"
+      className="border-cax-border bg-cax-surface-subtle relative overflow-hidden rounded-lg border"
       data-movie-area
     >
-      <PausableMovie src={getMoviePath(movie.id)} />
+      <PausableMovie
+        aspectHeight={movie.height}
+        aspectWidth={movie.width}
+        src={getMoviePath(movie.id)}
+      />
     </div>
   );
 };

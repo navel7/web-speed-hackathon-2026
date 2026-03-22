@@ -10,12 +10,14 @@ import { fetchBinary } from "@web-speed-hackathon-2026/client/src/utils/fetchers
 
 interface Props {
   src: string;
+  aspectWidth?: number;
+  aspectHeight?: number;
 }
 
 /**
  * クリックすると再生・一時停止を切り替えます。
  */
-export const PausableMovie = ({ src }: Props) => {
+export const PausableMovie = ({ src, aspectWidth = 1, aspectHeight = 1 }: Props) => {
   const { data, isLoading } = useFetch(src, fetchBinary);
 
   const animatorRef = useRef<Animator>(null);
@@ -61,30 +63,28 @@ export const PausableMovie = ({ src }: Props) => {
     });
   }, []);
 
-  if (isLoading || data === null) {
-    return null;
-  }
-
   return (
-    <AspectRatioBox aspectHeight={1} aspectWidth={1}>
-      <button
-        aria-label="動画プレイヤー"
-        className="group relative block h-full w-full"
-        onClick={handleClick}
-        type="button"
-      >
-        <canvas ref={canvasCallbackRef} className="w-full" />
-        <div
-          className={classNames(
-            "absolute left-1/2 top-1/2 flex items-center justify-center w-16 h-16 text-cax-surface-raised text-3xl bg-cax-overlay/50 rounded-full -translate-x-1/2 -translate-y-1/2",
-            {
-              "opacity-0 group-hover:opacity-100": isPlaying,
-            },
-          )}
+    <AspectRatioBox aspectHeight={aspectHeight} aspectWidth={aspectWidth}>
+      {!isLoading && data !== null ? (
+        <button
+          aria-label="動画プレイヤー"
+          className="group relative block h-full w-full"
+          onClick={handleClick}
+          type="button"
         >
-          <FontAwesomeIcon iconType={isPlaying ? "pause" : "play"} styleType="solid" />
-        </div>
-      </button>
+          <canvas ref={canvasCallbackRef} className="w-full" />
+          <div
+            className={classNames(
+              "absolute left-1/2 top-1/2 flex items-center justify-center w-16 h-16 text-cax-surface-raised text-3xl bg-cax-overlay/50 rounded-full -translate-x-1/2 -translate-y-1/2",
+              {
+                "opacity-0 group-hover:opacity-100": isPlaying,
+              },
+            )}
+          >
+            <FontAwesomeIcon iconType={isPlaying ? "pause" : "play"} styleType="solid" />
+          </div>
+        </button>
+      ) : null}
     </AspectRatioBox>
   );
 };
