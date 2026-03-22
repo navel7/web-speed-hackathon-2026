@@ -1,6 +1,6 @@
 import { ComponentProps, isValidElement, ReactElement, ReactNode } from "react";
-import SyntaxHighlighter from "react-syntax-highlighter";
-import { atomOneLight } from "react-syntax-highlighter/dist/esm/styles/hljs";
+import { PrismAsyncLight as SyntaxHighlighter } from "react-syntax-highlighter";
+import { oneLight } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 const getLanguage = (children: ReactElement<ComponentProps<"code">>) => {
   const className = children.props.className;
@@ -28,7 +28,7 @@ export const CodeBlock = ({ children }: ComponentProps<"pre">) => {
         border: "1px solid var(--color-cax-border)",
       }}
       language={language}
-      style={atomOneLight}
+      style={oneLight}
     >
       {code}
     </SyntaxHighlighter>
