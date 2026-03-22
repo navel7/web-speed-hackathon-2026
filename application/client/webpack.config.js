@@ -65,10 +65,9 @@ const config = {
   },
   output: {
     chunkFilename: "scripts/chunk-[contenthash].js",
-    chunkFormat: false,
     filename: "scripts/[name].js",
     path: DIST_PATH,
-    publicPath: "auto",
+    publicPath: "/",
     clean: true,
   },
   plugins: [
@@ -96,7 +95,7 @@ const config = {
       ],
     }),
     new HtmlWebpackPlugin({
-      inject: false,
+      inject: "body",
       template: path.resolve(SRC_PATH, "./index.html"),
     }),
   ],
@@ -134,7 +133,16 @@ const config = {
   },
   optimization: {
     minimize: isProduction,
-    splitChunks: false,
+    splitChunks: {
+      chunks: "all",
+      cacheGroups: {
+        vendors: {
+          test: /[\\/]node_modules[\\/]|[\\/]\.pnpm[\\/]/,
+          name: "vendors",
+          chunks: "initial",
+        },
+      },
+    },
     concatenateModules: isProduction,
     usedExports: isProduction,
     providedExports: isProduction,
