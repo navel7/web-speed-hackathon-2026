@@ -90,6 +90,8 @@ export const DirectMessageListPage = ({ activeUser, newDmModalId }: Props) => {
                       loading="lazy"
                       decoding="async"
                       src={getProfileImagePath(peer.profileImage.id)}
+                      width={48}
+                      height={48}
                     />
                     <div className="flex flex-1 flex-col">
                       <div className="flex items-center justify-between">

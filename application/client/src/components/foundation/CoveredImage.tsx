@@ -6,12 +6,13 @@ import { fetchBinary } from "@web-speed-hackathon-2026/client/src/utils/fetchers
 
 interface Props {
   src: string;
+  isPriority?: boolean;
 }
 
 /**
  * アスペクト比を維持したまま、要素のコンテンツボックス全体を埋めるように画像を拡大縮小します
  */
-export const CoveredImage = ({ src }: Props) => {
+export const CoveredImage = ({ src, isPriority = false }: Props) => {
   const dialogId = useId();
   // ダイアログの背景をクリックしたときに投稿詳細ページに遷移しないようにする
   const handleDialogClick = useCallback((ev: MouseEvent<HTMLDialogElement>) => {
@@ -50,8 +51,9 @@ export const CoveredImage = ({ src }: Props) => {
     <div className="relative h-full w-full overflow-hidden bg-cax-surface-subtle">
       <img
         alt="投稿画像"
-        loading="lazy"
+        loading={isPriority ? "eager" : "lazy"}
         decoding="async"
+        fetchpriority={isPriority ? "high" : "auto"}
         className="absolute left-1/2 top-1/2 h-full w-full max-w-none -translate-x-1/2 -translate-y-1/2 object-cover"
         src={src}
       />
