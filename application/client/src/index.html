@@ -4,6 +4,52 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CaX</title>
+    <link rel="preload" as="image" href="/images/083258be-3e8c-4537-ac9c-fd5fd9cd943b.jpg">
+    <link rel="preload" href="/fonts/ReiNoAreMincho-Regular.otf" as="font" type="font/otf" crossorigin>
+    <style>
+      :root {
+        --cax-canvas: #f5f5f4;
+        --cax-surface: #ffffff;
+        --cax-surface-subtle: #fafaf9;
+        --cax-border: #d6d3d1;
+        --cax-text: #042f2e;
+      }
+      body {
+        background-color: var(--cax-canvas);
+        color: var(--cax-text);
+        margin: 0;
+        font-family: sans-serif;
+      }
+      .bg-cax-canvas { background-color: var(--cax-canvas); }
+      .bg-cax-surface { background-color: var(--cax-surface); }
+      .bg-cax-surface-subtle { background-color: var(--cax-surface-subtle); }
+      .text-cax-text { color: var(--cax-text); }
+      .border-cax-border { border-color: var(--cax-border); }
+      
+      /* Skeleton base layout */
+      .flex { display: flex; }
+      .flex-col { flex-direction: column; }
+      .justify-center { justify-content: center; }
+      .min-h-screen { min-height: 100vh; }
+      .w-full { width: 100%; }
+      .h-full { height: 100%; }
+      .relative { position: relative; }
+      .fixed { position: fixed; }
+      
+      @media (min-width: 1024px) {
+        .lg\:w-48 { width: 12rem; }
+        .lg\:flex-col { flex-direction: column; }
+        .lg\:relative { position: relative; }
+      }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: .5; }
+      }
+      .animate-pulse {
+        animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      }
+    </style>
     <% htmlWebpackPlugin.files.css.forEach(function(file) { %>
       <link href="<%= file %>" rel="stylesheet">
     <% }) %>
@@ -175,6 +221,28 @@
     </style>
   </head>
   <body class="bg-cax-canvas text-cax-text">
-    <div id="app"></div>
+    <div id="app">
+      <div class="relative z-0 flex justify-center font-sans">
+        <div class="bg-cax-surface text-cax-text flex min-h-screen max-w-full">
+          <aside class="relative z-10">
+            <nav class="border-cax-border bg-cax-surface fixed right-0 bottom-0 left-0 z-10 h-12 border-t lg:relative lg:h-full lg:w-48 lg:border-t-0 lg:border-r">
+              <div class="relative flex h-full items-center justify-evenly lg:fixed lg:w-48 lg:flex-col lg:justify-start lg:gap-2 lg:p-2">
+                <div class="h-8 w-8 rounded bg-cax-surface-subtle lg:h-10 lg:w-full"></div>
+                <div class="h-8 w-8 rounded bg-cax-surface-subtle lg:h-10 lg:w-full"></div>
+                <div class="h-8 w-8 rounded bg-cax-surface-subtle lg:h-10 lg:w-full"></div>
+                <div class="hidden h-8 w-8 rounded bg-cax-surface-subtle lg:block lg:h-10 lg:w-full"></div>
+              </div>
+            </nav>
+          </aside>
+          <main class="relative z-0 w-screen max-w-screen-sm min-w-0 shrink pb-12 lg:pb-0">
+            <div class="space-y-4 p-4">
+              <div class="h-32 w-full animate-pulse rounded-lg bg-cax-surface-subtle"></div>
+              <div class="h-64 w-full animate-pulse rounded-lg bg-cax-surface-subtle"></div>
+              <div class="h-64 w-full animate-pulse rounded-lg bg-cax-surface-subtle"></div>
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
