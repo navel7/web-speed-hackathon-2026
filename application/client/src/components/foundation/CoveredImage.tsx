@@ -1,4 +1,3 @@
-import { load, ImageIFD } from "piexifjs";
 import { MouseEvent, useCallback, useId, useState } from "react";
 
 import { Button } from "@web-speed-hackathon-2026/client/src/components/foundation/Button";
@@ -27,7 +26,11 @@ export const CoveredImage = ({ src }: Props) => {
     
     setIsLoadingAlt(true);
     try {
-      const data = await fetchBinary(src);
+      const [{ load, ImageIFD }, data] = await Promise.all([
+        import("piexifjs"),
+        fetchBinary(src)
+      ]);
+
       if (data) {
         const exif = load(Buffer.from(data).toString("binary"));
         const raw = exif?.["0th"]?.[ImageIFD.ImageDescription];
