@@ -59,16 +59,16 @@ export const CoveredImage = ({ src, isPriority = false }: Props) => {
       />
 
       <button
-        className="border-cax-border bg-cax-surface-raised/90 text-cax-text-muted hover:bg-cax-surface absolute right-1 bottom-1 z-10 rounded-full border px-2 py-1 text-center text-xs"
+        className="border-cax-border bg-cax-surface-raised/90 text-cax-text-muted hover:bg-cax-surface absolute right-0.5 bottom-0.5 z-10 rounded-full border px-1.5 py-0.5 text-center text-[10px] leading-none"
         type="button"
         command="show-modal"
         commandfor={dialogId}
-        onClick={(e) => {
-          e.stopPropagation();
+        data-alt-button
+        onClick={() => {
           void loadAltText();
         }}
       >
-        {isLoadingAlt ? "読み込み中..." : "ALT を表示する"}
+        {isLoadingAlt ? "..." : "ALT"}
       </button>
 
       <Modal id={dialogId} closedby="any" onClick={handleDialogClick}>

@@ -11,9 +11,21 @@ import { getProfileImagePath } from "@web-speed-hackathon-2026/client/src/utils/
 const isClickedAnchorOrButton = (target: EventTarget | null, currentTarget: Element): boolean => {
   while (target !== null && target instanceof Element) {
     const tagName = target.tagName.toLowerCase();
-    if (["button", "a"].includes(tagName)) {
+    
+    // aタグ（リンク）は常に詳細遷移をブロック（リンク先への遷移を優先）
+    if (tagName === "a") {
       return true;
     }
+
+    // ボタンの場合、動画プレイヤーエリア内やALTボタンでなければ詳細遷移をブロック
+    if (tagName === "button") {
+      // 動画の再生/停止ボタン、またはALTボタンの場合は遷移を許可する
+      if (target.closest("[data-movie-area]") || target.closest("[data-alt-button]")) {
+        return false;
+      }
+      return true;
+    }
+
     if (currentTarget === target) {
       return false;
     }

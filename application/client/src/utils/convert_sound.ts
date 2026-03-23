@@ -5,6 +5,9 @@ interface Options {
   extension: string;
 }
 
+/**
+ * 音声ファイルを指定の形式（超軽量）に変換します
+ */
 export async function convertSound(file: File, options: Options): Promise<Blob> {
   const ffmpeg = await loadFFmpeg();
 
@@ -16,13 +19,11 @@ export async function convertSound(file: File, options: Options): Promise<Blob> 
   const metadata = await extractMetadataFromSound(file);
 
   await ffmpeg.exec([
-    "-i",
-    "file",
-    "-metadata",
-    `artist=${metadata.artist}`,
-    "-metadata",
-    `title=${metadata.title}`,
-    "-vn",
+    "-i", "file",
+    "-metadata", `artist=${metadata.artist}`,
+    "-metadata", `title=${metadata.title}`,
+    "-vn",                      // 映像なし
+    "-ab", "64k",               // 音声ビットレートを 64kbps に制限（軽量化）
     exportFile,
   ]);
 
@@ -30,6 +31,5 @@ export async function convertSound(file: File, options: Options): Promise<Blob> 
 
   ffmpeg.terminate();
 
-  const blob = new Blob([output]);
-  return blob;
+  return new Blob([output], { type: "audio/mpeg" });
 }
